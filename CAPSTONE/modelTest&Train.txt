@@ -1,0 +1,31 @@
+Test and Train accuracies
+
+ADHD1 - Test (0.8889), Train (0.8411)
+ADHD2 - Test (0.8519), Train (0.8879)
+ADHD3 - Test (0.8149), Train (0.3925)
+ADHD4 - Test (0.8519), Train (0.9439)
+ADHD5 - Test (0.9259), Train (0.9252)
+
+BPD1 - Test (0.6296), Train (0.7664)
+BPD2 - Test (0.6296), Train (0.8785)
+BPD3 - Test (0.5556), Train (0.5981)
+BPD4 - Test (0.6667), Train (0.8224)
+BPD5 - Test (0.7407), Train (0.8411)
+
+GADG1 - Test (0.7778), Train (0.7860)
+GADG2 - Test (0.7407), Train (0.8131)
+GADG3 - Test (0.7778), Train (0.6636)
+GADG4 - Test (0.7407), Train (0.8318)
+GADG5 - Test (0.7037), Train (0.7757)
+
+DEPG1 - Test (0.7778), Train (0.7664)
+DEPG2 - Test (0.8519), Train (0.8318)
+DEPG3 - Test (0.7407), Train (0.4673)
+DEPG4 - Test (0.8519), Train (0.8318)
+DEPG5 - Test (0.8519), Train (0.8598)
+
+SUD1 - Test (0.7407), Train (0.8131)
+SUD2 - Test (0.7778), Train (0.8411)
+SUD3 - Test (0.7778), Train (0.4112)
+SUD4 - Test (0.7778), Train (0.8411)
+SUD5 - Test (0.7037), Train (0.8505)

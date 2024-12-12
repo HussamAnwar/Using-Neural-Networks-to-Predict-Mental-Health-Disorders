@@ -83,13 +83,11 @@ def direct():
 
   # Drop irrelevant columns like ID
   df = df.drop(columns=["GADE", "S. No.", "Timestamp", "Game", "Platform", "earnings", "whyplay", "League", "highestleague", "Work", "Degree", "Gender", "Birthplace", "Residence", "Reference", "Playstyle", "accept", "Residence_ISO3", "Birthplace_ISO3"])
-  print(df)
-
-  # Fill missing values (if any)
+  
+  # Fill missing values
   df = df.fillna(0)
   index = list(df)
 
-  print(index)
   GAD7S = df["GAD_T"]
 
   #checking the values to see if an individual scored for moderate anxiety or above.
@@ -101,37 +99,21 @@ def direct():
   X = df.drop(columns=["Anxiety"])
   y = df["Anxiety"]
   y = y.to_frame()
-  print(df)
-
-  print(y)
+  
   y_array = y.to_numpy()
   count_zero = np.count_nonzero(y_array == 1)
-  print(count_zero)
 
   # Normalize features
-  print(df)
   scaler = StandardScaler()
   X_scaled = scaler.fit_transform(X)
   X_scaled = np.nan_to_num(X_scaled, nan=0)
 
-  #X_scaled = np.array(X_scaled)
-  #np.set_printoptions(threshold=np.inf)
-  #print(X_scaled)
-
-
   # Convert to PyTorch tensors
   X_tensor = torch.tensor(X_scaled, dtype=torch.float32)
   y_tensor = torch.tensor(y.values, dtype=torch.float32)
-  #torch.set_printoptions(profile="full")
-  #print(X_tensor)
-  #print(y_tensor)
 
   # Split data into train and test sets
   X_train, X_test, y_train, y_test = train_test_split(X_tensor, y_tensor, test_size=0.2)
-  #torch.set_printoptions(profile="full")
-  #print(X_train)
-  #print(y_train)
-  #print(df.to_markdown())
 
   # Define weights initialization function
   def weights_init_normal(m):
@@ -153,11 +135,10 @@ def direct():
           torch.nn.init.constant_(m.bias.data, 0)
 
   def train_model(model, criterion, patience, model_path):
-    #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
-      model.apply(weights_init_normal)  # Apply weight initialization to the model
+
+      model.apply(weights_init_normal)
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)
 
@@ -250,13 +231,13 @@ def direct():
           correct_predictions = torch.sum(test_outputs == y_test.view(-1, 1)).item()
           print(f"Number of correct predictions for model_" + approach + ":" + f"{correct_predictions}/{len(y_test)}")
           for i in range(len(y_test)):
-              '''#Delete these apostrophes to see which ID's were wrongly precicted
+              #Delete these apostrophes to see which ID's were wrongly precicted
               if test_outputs[i].item() != y_test[i].item():
                   print(f"ID: {df.index[i]}, Predicted: {test_outputs[i].item()}, Actual: {y_test[i].item()}")
-              '''
+              
           # Append results to lists
           test_accuracies.append(test_accuracy.item())
           num_correct_predictions.append(correct_predictions)
 
-if __name__ == "__main":
+if __name__ == "__main__":
   direct()

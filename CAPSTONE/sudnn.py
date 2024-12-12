@@ -76,25 +76,19 @@ class SUDClassifier(nn.Module):
         return logits
 def direct():
 
-  # Step 1: Read the data
+  #Read the data
   df = pd.read_csv("patient_info.csv", delimiter=";")
 
-  print(df)
   # Drop irrelevant columns like ID
   df = df.drop(columns=["ID", "HRV_TIME", "ACC_TIME", "ACC_DAYS", "ACC", "HRV_HOURS", "HRV", "SEX", "filter_$"])
-  print(df)
 
-
-
-  # Step 2: Preprocess the data
-  # Convert categorical variables to one-hot encoding (if any)
-  #df = pd.get_dummies(df, columns=["SEX"])
-  print(df)
-  # Fill missing values (if any)
+  #Preprocess the data
+  
+  # Fill missing values
   df = df.fillna(0)
   df["SUBSTANCE"] = df["SUBSTANCE"].replace(2,1)
   df["SUBSTANCE"] = df["SUBSTANCE"].replace(9,1)
-  print(df)
+  
   # Split features and labels
   X = df.drop(columns=["SUBSTANCE"])
   y = df["SUBSTANCE"]
@@ -130,10 +124,9 @@ def direct():
           torch.nn.init.constant_(m.bias.data, 0)
 
   def train_model(model, criterion, patience, model_path):
-    #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
+
       model.apply(weights_init_normal)  # Apply weight initialization to the model
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)

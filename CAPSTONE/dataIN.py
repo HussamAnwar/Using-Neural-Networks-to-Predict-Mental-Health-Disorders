@@ -38,7 +38,6 @@ MED_Stimulants: A 1 if the patient is prescribed stimulant medication and a 0 ot
 filter_$: Any value as this column is not used. (Preferably 0)
 
 Written By:
-
 Hussam Anwar
 Cali Cadavid
 FALL 2024

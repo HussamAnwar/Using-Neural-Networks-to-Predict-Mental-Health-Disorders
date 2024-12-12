@@ -77,21 +77,15 @@ class ADHDClassifier(nn.Module):
         logits = self.net_stack(x)
         return logits
 def direct():
-  # Step 1: Read the data
+  #Read the data
   df = pd.read_csv("patient_info.csv", delimiter=";")
 
-
-  print(df)
   # Drop irrelevant columns like ID
   df = df.drop(columns=["ID", "HRV_TIME", "ACC_TIME", "ACC_DAYS", "ACC", "HRV_HOURS", "HRV", "SEX", "filter_$"])
-  print(df)
 
-  # Step 2: Preprocess the data
-  # Convert categorical variables to one-hot encoding
-  print(df)
+  #Preprocess the data
   # Fill missing values
   df = df.fillna(0)
-  print(df)
   # Split features and labels
   X = df.drop(columns=["ADHD"])
   y = df["ADHD"]
@@ -131,7 +125,7 @@ def direct():
     #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
+      
       model.apply(weights_init_normal)  # Apply weight initialization to the model
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)
@@ -208,7 +202,6 @@ def direct():
   approach_list = ["ADHD1", "ADHD2", "ADHD3", "ADHD4", "ADHD5"]
   for approach in approach_list:
     input_dim = X_train.shape[1]
-    print(input_dim)
     model = ADHDClassifier(approach, input_dim)
     model_path = os.path.join(out_path, "model_" + approach + ".pth")
 

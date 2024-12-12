@@ -12,7 +12,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import os
 
-
 class BPDClassifier(nn.Module):
     def __init__(self, approach, input_dim):
       super().__init__()
@@ -75,30 +74,21 @@ class BPDClassifier(nn.Module):
         logits = self.net_stack(x)
         return logits
 def direct():
-  # Step 1: Read the data
+  #Read the data
   df = pd.read_csv("patient_info.csv", delimiter=";")
 
-
-  print(df)
   # Drop irrelevant columns like ID
   df = df.drop(columns=["ID", "HRV_TIME", "ACC_TIME", "ACC_DAYS", "ACC", "HRV_HOURS", "HRV", "SEX", "filter_$"])
-  print(df)
-
-
-
-  # Step 2: Preprocess the data
-  print(df)
+  
+  #Preprocess the data
+  
   # Fill missing values
   df = df.fillna(0)
   df["BIPOLAR"] = df["BIPOLAR"].replace(2,1)
-  print(df)
+  
   # Split features and labels
   X = df.drop(columns=["BIPOLAR"])
   y = df["BIPOLAR"]
-
-
-
-
 
   # Normalize features
   scaler = StandardScaler()
@@ -112,7 +102,7 @@ def direct():
   X_train, X_test, y_train, y_test = train_test_split(X_tensor, y_tensor, test_size=0.2, random_state=42)
 
 
-  # Define weights initialization function
+  # Define weights function
   def weights_init_normal(m):
       classname = m.__class__.__name__
       if classname.find('Linear') != -1:
@@ -133,10 +123,9 @@ def direct():
 
 
   def train_model(model, criterion, patience, model_path):
-    #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
+      
       model.apply(weights_init_normal)  # Apply weight initialization to the model
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)
@@ -215,7 +204,6 @@ def direct():
     input_dim = X_train.shape[1]
     model = BPDClassifier(approach, input_dim)
     model_path = os.path.join(out_path, "model_" + approach + ".pth")
-
 
     trained_model = train_model(model, criterion, patience, model_path)
     torch.save(trained_model, model_path)

@@ -75,27 +75,18 @@ class DEPGClassifier(nn.Module):
         logits = self.net_stack(x)
         return logits
 def direct():
-
-  # Step 1: Read the data
+  #Read the data
   df = pd.read_csv("patient_info.csv", delimiter=";")
 
-
-  print(df)
   # Drop irrelevant columns like ID
   df = df.drop(columns=["ID", "HRV_TIME", "ACC_TIME", "ACC_DAYS", "ACC", "HRV_HOURS", "HRV", "SEX", "filter_$"])
-  print(df)
-
-
-
-  # Step 2: Preprocess the data
-  # Convert categorical variables to one-hot encoding
-  #df = pd.get_dummies(df, columns=["SEX"])
-  print(df)
+  
+  #Preprocess the data
   # Fill missing values
   df = df.fillna(0)
   df["UNIPOLAR"] = df["UNIPOLAR"].replace(2,1)
   df["UNIPOLAR"] = df["UNIPOLAR"].replace(9,1)
-  print(df)
+  
   # Split features and labels
   X = df.drop(columns=["UNIPOLAR"])
   y = df["UNIPOLAR"]
@@ -132,11 +123,9 @@ def direct():
 
 
   def train_model(model, criterion, patience, model_path):
-    #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
-      model.apply(weights_init_normal)  # Apply weight initialization to the model
+      model.apply(weights_init_normal)
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)
 
@@ -214,7 +203,6 @@ def direct():
     input_dim = X_train.shape[1]
     model = DEPGClassifier(approach, input_dim)
     model_path = os.path.join(out_path, "model_" + approach + ".pth")
-
 
     trained_model = train_model(model, criterion, patience, model_path)
     torch.save(trained_model, model_path)

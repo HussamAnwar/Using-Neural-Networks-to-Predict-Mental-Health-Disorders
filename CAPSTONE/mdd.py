@@ -78,42 +78,27 @@ class MDDClassifier(nn.Module):
         return logits
 def direct():
   # Step 1: Read the data
-  #df = pd.read_csv("../content/depression_data.csv", delimiter=",")
-
   df = pd.read_csv("b_depressed.csv", delimiter=",")
 
-  #print(df)
   # Drop irrelevant columns like ID
   df = df.drop(columns=["Survey_id", "Ville_id"])
-  print(df)
-
+  
   # Fill missing values (if any)
   #df = df.fillna(0)
   index = list(df)
-
-  print(index)
-
-
 
   # Split features and labels
   X = df.drop(columns=["depressed"])
   y = df["depressed"]
   y = y.to_frame()
 
-  print(y)
   y_array = y.to_numpy()
   count_zero = np.count_nonzero(y_array == 1)
-  print(count_zero)
-
-
 
   # Normalize features
-
-  print(df)
   scaler = MinMaxScaler()
   X_scaled = scaler.fit_transform(X)
   X_scaled = np.nan_to_num(X_scaled, nan=0)
-
 
   # Convert to PyTorch tensors
   X_tensor = torch.tensor(X_scaled, dtype=torch.float32)
@@ -143,10 +128,8 @@ def direct():
           torch.nn.init.constant_(m.bias.data, 0)
 
   def train_model(model, criterion, patience, model_path):
-    #for _ in range(20):
       # Initialize the model with weights initialized normally
       input_dim = X_train.shape[1]
-      #model = ADHDClassifier(input_dim)
       model.apply(weights_init_normal)  # Apply weight initialization to the model
       # Initialize the optimizer
       optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=0.001)
