@@ -34,7 +34,7 @@ MED_Antipsych: A 1 if the patient is prescribed antipsychotics and a 0 otherwise
 MED_Anxiety_Benzo: A 1 if the patient is prescribed benzodiazepines and a 0 otherwise.
 MED_Sleep: A 1 if the patients is prescribed sleep medicaiton and a 0 otherwise.
 MED_Analgesics_Opioids: A 1 if the patient is prescribed pain medication and a 0 otherwise.
-MED_Stimulants: A 1 if the patient is prescribed stimulant medicaiton and a 0 otherwise.
+MED_Stimulants: A 1 if the patient is prescribed stimulant medication and a 0 otherwise.
 filter_$: Any value as this column is not used. (Preferably 0)
 
 Written By:
@@ -61,7 +61,7 @@ from sudnn import SUDClassifier
 partial_path = "CAPMODELS/output/model_"
 
 def disorder_to_predict():
-    print("Which disorder are you looking to predict? (Please type a number)")
+    print("\nWhich disorder are you looking to predict? (Please type a number)")
     disorder = int(input("1(Depression), 2(Anxiety), 3(Bipolar), 4(ADHD), 5(Substance Use Disorder): "))
     match disorder:
         case 1:
@@ -88,7 +88,6 @@ def predict(new_data, model_path, i, disorder):
     new_data_scaled = scaler.fit_transform(new_data)
     new_data_tensor = torch.tensor(new_data_scaled, dtype = torch.float32)
     input_dim = new_data_tensor.shape[1]
-    print(disorder)
     match disorder:
         case "DEPG":
             model = DEPGClassifier(f"DEPG{i}", 23)
@@ -101,9 +100,6 @@ def predict(new_data, model_path, i, disorder):
         case "SUD":
             model = SUDClassifier(f"SUD{i}", 23)
     model_path = model_path + f"{i}.pth"
-    #print(model_path)
-    #print(input_dim)
-    #print(torch.load(model_path).keys())
     check = torch.load(model_path)
     model.load_state_dict(check)
     model.eval()
@@ -122,7 +118,7 @@ def preprocess_data(df, drop):
 def main():
     print("Please enter the file name with the file extension.\nREMINDER: The file extension must be .csv")
     file_name = input("Ensure that the file name is spelled correctly: ")
-    df = pd.read_csv(file_name, sep = ";", engine = "python")
+    df = pd.read_csv(file_name, sep = '[,;"]', index_col = False,engine = "python")
     disorder = disorder_to_predict()
     match disorder:
         case "DEPG":
@@ -139,20 +135,21 @@ def main():
     model_path = load_model(disorder)
     predictions = []
     idList = dfID.values.tolist()
-
-    for i in range(0,5):
-        predictions.append(predict(df, model_path, i+1, disorder))
-
-        
-        print(predictions)
-    for i in range(0,5):
-        for j in range(0,len(predictions[i])):
-            print(f"Model_{disorder}{i+1} predicts a {predictions[i][j]*100:.4f}% likelihood of ID {idList[j]} to have {disorder}")
+    fileExists = True
+    while fileExists == True:
+        file_name = input("\nEnter the file name where you want the predictions to be saved (eg: predictions.txt): ")
+        if os.path.isfile(file_name) == False:
+            fileExists = False
+            with open(file_name, "a") as file:
+                for i in range(0,5):
+                    predictions.append(predict(df, model_path, i+1, disorder))
+                for i in range(0,5):
+                    for j in range(0,len(predictions[i])):
+                        file.write(f"Model_{disorder}{i+1}: {predictions[i][j]*100:.4f}% likelihood, ID: {idList[j]}\n")
+                print(f"The file {file_name} can be found in the current folder.")
+        else:
+            print("\nThe file already exist. Please enter a different file name.")
             
-    #print(predictions)
-    
-    #print(predictions)
-
 
 
 if __name__ == "__main__":
