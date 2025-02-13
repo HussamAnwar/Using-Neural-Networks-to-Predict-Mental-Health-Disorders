@@ -1,4 +1,4 @@
-# UNDERGRADCAP-Fall-2024
+# UNDERGRADUATE CAPSTONE-Fall-2024
 
 This project was written in python 3.12 in a conda environment.The purpose of this project is to see which neural network architecture is to train neural networks to assist medical professionals in the diagnoses of 5 mental health disorders.
 
